@@ -138,7 +138,14 @@ RUN apk --update --no-cache add -t build-dependencies \
     doc/ \
     tests/ \
     /tmp/*
-    
+
+LABEL org.opencontainers.image.version="${LIBRENMS_VERSION}"
+LABEL org.opencontainers.image.title="${TITLE}"
+LABEL org.opencontainers.image.description="${DESCRIPTION}"
+LABEL org.opencontainers.image.url="${WEBSITE}"
+LABEL org.opencontainers.image.source="${WEBSITE}"
+LABEL org.opencontainers.image.created="${DATE}"
+
 RUN ln -s /data/menu/ /opt/librenms/resources/views/
 
 COPY rootfs /
