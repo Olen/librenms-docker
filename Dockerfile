@@ -139,6 +139,12 @@ RUN apk --update --no-cache add -t build-dependencies \
     tests/ \
     /tmp/*
 
+
+ARG TITLE
+ARG DESCRIPTION
+ARG WEBSITE
+ARG DATE
+
 LABEL org.opencontainers.image.version="${LIBRENMS_VERSION}"
 LABEL org.opencontainers.image.title="${TITLE}"
 LABEL org.opencontainers.image.description="${DESCRIPTION}"
