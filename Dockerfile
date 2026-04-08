@@ -132,7 +132,7 @@ RUN apk --update --no-cache add -t build-dependencies \
   && echo "foreach (glob(\"/data/config/*.php\") as \$filename) include \$filename;" >> config.php \
   && echo "foreach (glob(\"${LIBRENMS_PATH}/config.d/*.php\") as \$filename) include \$filename;" >> config.php \
   && chown -R librenms:librenms ${LIBRENMS_PATH} \
-  && su librenms -s /bin/sh -c "COMPOSER_CACHE_DIR=/tmp composer install --no-dev --no-interaction --no-ansi" \
+  && su librenms -s /bin/sh -c "COMPOSER_CACHE_DIR=/tmp composer install --no-dev --no-interaction --no-ansi && FORCE=1 COMPOSER_CACHE_DIR=/tmp composer require --no-interaction --no-ansi socialiteproviders/nextcloud" \
   && apk del build-dependencies \
   && rm -rf .git \
     html/plugins/Test \
