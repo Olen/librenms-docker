@@ -1,0 +1,5 @@
+#!/command/with-contenv sh
+
+# Wait before each (re)start, so a bot that cannot connect does not hammer the IRC server.
+sleep 10
+exec s6-setuidgid "${PUID}:${PGID}" /opt/librenms/irc.php

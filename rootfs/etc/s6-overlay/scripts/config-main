@@ -1,6 +1,7 @@
-#!/usr/bin/with-contenv bash
-# shellcheck shell=bash
+#!/bin/bash
 set -e
+
+cd "${LIBRENMS_PATH}"
 
 # From https://github.com/docker-library/mariadb/blob/master/docker-entrypoint.sh#L21-L41
 # usage: file_env VAR [DEFAULT]
@@ -84,41 +85,3 @@ artisan db:seed --force --no-ansi --no-interaction
 echo "Clear cache"
 artisan cache:clear --no-interaction
 artisan config:cache --no-interaction
-
-mkdir -p /etc/services.d/nginx
-cat >/etc/services.d/nginx/run <<EOL
-#!/usr/bin/execlineb -P
-with-contenv
-s6-setuidgid ${PUID}:${PGID}
-nginx -g "daemon off;"
-EOL
-chmod +x /etc/services.d/nginx/run
-
-mkdir -p /etc/services.d/php-fpm
-cat >/etc/services.d/php-fpm/run <<EOL
-#!/usr/bin/execlineb -P
-with-contenv
-s6-setuidgid ${PUID}:${PGID}
-php-fpm84 -F
-EOL
-chmod +x /etc/services.d/php-fpm/run
-
-mkdir -p /etc/services.d/snmpd
-cat >/etc/services.d/snmpd/run <<EOL
-#!/usr/bin/execlineb -P
-with-contenv
-/usr/sbin/snmpd -f -c /etc/snmp/snmpd.conf
-EOL
-chmod +x /etc/services.d/snmpd/run
-
-mkdir -p /etc/services.d/ircbot
-cat >/etc/services.d/ircbot/run <<EOL
-#!/usr/bin/with-contenv sh
-# Wait before each (re)start, so a bot that cannot connect does not hammer the IRC server.
-# exec, so s6 supervises the bot itself and s6-svc can stop or restart it.
-sleep 10
-if [ ${LIBRENMS_IRC_SERVICE:-0} == "1" ]; then
-  exec s6-setuidgid ${PUID}:${PGID} /opt/librenms/irc.php
-fi
-EOL
-chmod +x /etc/services.d/ircbot/run
